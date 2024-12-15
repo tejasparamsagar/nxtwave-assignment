@@ -1,0 +1,22 @@
+.list-container {
+  border-radius: 5px;
+  background: #e3f7ff;
+  padding: 15px;
+  flex-basis: 20%;
+}
+
+.list-header {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.list-header span {
+  font-weight: bold;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

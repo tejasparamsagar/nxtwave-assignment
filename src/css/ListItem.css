@@ -1,0 +1,21 @@
+.list-item {
+  border-radius: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #999;
+}
+
+.list-item-icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list-item-title {
+ font-weight: 700;
+}
+
+
+.list-item-icons img {
+  cursor: pointer;
+}

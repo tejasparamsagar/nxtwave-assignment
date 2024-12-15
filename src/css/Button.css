@@ -1,0 +1,17 @@
+.custom-button {
+  border-radius: 6px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.primary {
+  background: hsl(210, 100%, 60%);
+  color: #ffffff;
+}
+
+.secondary {
+  background: inherit;
+  color: black;
+  border: 0.5px solid #999;
+}
