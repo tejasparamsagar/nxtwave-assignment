@@ -2,11 +2,11 @@ import "../css/ListItem.css";
 import arrowLeft from "../assets/arrow_left.png";
 import arrowRight from "../assets/arrow_right.png";
 
-const ListItem = ({ title, subTitle, isCreateNewList, idx }) => {
+const ListItem = ({ name, description, isCreateNewList, idx }) => {
   return (
     <div className="list-item">
-      <p className="list-item-title">{title}</p>
-      <p>{subTitle}</p>
+      <p className="list-item-title">{name}</p>
+      <p>{description}</p>
       {isCreateNewList && (
         <div className="list-item-icons">
           <img

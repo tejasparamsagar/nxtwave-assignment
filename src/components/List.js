@@ -23,8 +23,8 @@ const List = ({
         {listItems?.map((listItem) => (
           <ListItem
             key={listItem?.id}
-            title={listItem?.title}
-            subTitle={listItem?.subTitle}
+            name={listItem?.name}
+            description={listItem?.description}
             isCreateNewList={isCreateNewList}
             idx={idx}
           />

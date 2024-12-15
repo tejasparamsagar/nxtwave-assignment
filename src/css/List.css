@@ -3,6 +3,8 @@
   background: #e3f7ff;
   padding: 15px;
   flex-basis: 20%;
+  max-height: 420px;
+  overflow: auto;
 }
 
 .list-header {
