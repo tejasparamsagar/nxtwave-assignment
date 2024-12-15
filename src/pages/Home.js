@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import "../css/Home.css";
 import List from "../components/List";
+import Spinner from "../components/Spinner";
 
 const Home = () => {
   const [list, setList] = useState([]);
@@ -207,7 +208,7 @@ const Home = () => {
         </div>
       )}
       {loading ? (
-        <h2>Loading...</h2>
+        <Spinner />
       ) : (
         <div className="all-listing">
           {!isCreateNewList &&
