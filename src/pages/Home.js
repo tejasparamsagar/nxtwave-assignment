@@ -57,7 +57,7 @@ const Home = () => {
         return temp;
       });
     } else {
-      setErrorMsg("*You should create exactly 2 lists to create a new list");
+      setErrorMsg("*You should select exactly 2 lists to create a new list");
     }
   };
 
