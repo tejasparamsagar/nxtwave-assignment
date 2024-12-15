@@ -2,7 +2,14 @@ import "../css/ListItem.css";
 import arrowLeft from "../assets/arrow_left.png";
 import arrowRight from "../assets/arrow_right.png";
 
-const ListItem = ({ name, description, isCreateNewList, idx }) => {
+const ListItem = ({
+  name,
+  description,
+  isCreateNewList,
+  idx,
+  handleChangeListItem,
+  id,
+}) => {
   return (
     <div className="list-item">
       <p className="list-item-title">{name}</p>
@@ -15,6 +22,7 @@ const ListItem = ({ name, description, isCreateNewList, idx }) => {
             width={25}
             height={25}
             style={{ visibility: idx > 0 ? "unset" : "hidden" }}
+            onClick={() => handleChangeListItem(idx, "left", id)}
           />
           <img
             src={arrowRight}
@@ -22,6 +30,7 @@ const ListItem = ({ name, description, isCreateNewList, idx }) => {
             width={25}
             height={25}
             style={{ visibility: idx < 2 ? "unset" : "hidden" }}
+            onClick={() => handleChangeListItem(idx, "right", id)}
           />
         </div>
       )}

@@ -8,16 +8,19 @@ const List = ({
   handleSelectList,
   isCreateNewList,
   idx,
+  handleChangeListItem,
 }) => {
   return (
     <div className="list-container">
       <div className="list-header">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={() => handleSelectList(listNo)}
-        />
-        <span>List {idx + 1}</span>
+        {!isCreateNewList && (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(event) => handleSelectList(event, listNo)}
+          />
+        )}
+        <span>List {`${listNo} (${listItems?.length})`}</span>
       </div>
       <div className="list-items">
         {listItems?.map((listItem) => (
@@ -27,6 +30,8 @@ const List = ({
             description={listItem?.description}
             isCreateNewList={isCreateNewList}
             idx={idx}
+            handleChangeListItem={handleChangeListItem}
+            id={listItem?.id}
           />
         ))}
       </div>

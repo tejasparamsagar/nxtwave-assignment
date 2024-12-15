@@ -8,7 +8,9 @@ const Home = () => {
   const [isCreateNewList, setIsCreateNewList] = useState(false);
   const [selectedList, setSelectedList] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  //handle select unselect checkbox
   const handleSelectList = (event, id) => {
     const checked = event.target.checked;
 
@@ -39,6 +41,7 @@ const Home = () => {
     }
   };
 
+  //handle create new list
   const handleCreateNewList = () => {
     if (selectedList.length === 2) {
       setIsCreateNewList(true);
@@ -46,7 +49,7 @@ const Home = () => {
         const temp = [...prev];
         const lastElement = temp.pop();
         temp.push({
-          id: null,
+          id: list.length + 1,
           isSelected: false,
           listItems: [],
         });
@@ -58,14 +61,95 @@ const Home = () => {
     }
   };
 
+  // arrow clicks
+  const handleChangeListItem = (sourceListIdx, type, itemId) => {
+    if (sourceListIdx === 0) {
+      setSelectedList((prev) => {
+        let temp = [...prev];
+        let selectedItem = temp[sourceListIdx]?.listItems?.find(
+          (ele) => ele?.id === itemId
+        );
+        temp[sourceListIdx].listItems = temp[sourceListIdx]?.listItems?.filter(
+          (ele) => ele?.id !== itemId
+        );
+        if (selectedItem) {
+          temp[sourceListIdx + 1].listItems.push(selectedItem);
+        }
+        return temp;
+      });
+    }
+
+    if (sourceListIdx === 2) {
+      setSelectedList((prev) => {
+        let temp = [...prev];
+        let selectedItem = temp[sourceListIdx]?.listItems?.find(
+          (ele) => ele?.id === itemId
+        );
+        temp[sourceListIdx].listItems = temp[sourceListIdx]?.listItems?.filter(
+          (ele) => ele?.id !== itemId
+        );
+        if (selectedItem) {
+          temp[sourceListIdx - 1].listItems.push(selectedItem);
+        }
+        return temp;
+      });
+    }
+
+    if (sourceListIdx === 1) {
+      if (type === "left") {
+        setSelectedList((prev) => {
+          let temp = [...prev];
+          let selectedItem = temp[sourceListIdx]?.listItems?.find(
+            (ele) => ele?.id === itemId
+          );
+          temp[sourceListIdx].listItems = temp[
+            sourceListIdx
+          ]?.listItems?.filter((ele) => ele?.id !== itemId);
+          if (selectedItem) {
+            temp[sourceListIdx - 1].listItems.push(selectedItem);
+          }
+          return temp;
+        });
+      } else {
+        setSelectedList((prev) => {
+          let temp = [...prev];
+          let selectedItem = temp[sourceListIdx]?.listItems?.find(
+            (ele) => ele?.id === itemId
+          );
+          temp[sourceListIdx].listItems = temp[
+            sourceListIdx
+          ]?.listItems?.filter((ele) => ele?.id !== itemId);
+          if (selectedItem) {
+            temp[sourceListIdx + 1].listItems.push(selectedItem);
+          }
+          return temp;
+        });
+      }
+    }
+  };
+
   const handleCancel = () => {
     setIsCreateNewList(false);
     setSelectedList([]);
     setList((prev) => prev.map((ele) => ({ ...ele, isSelected: false })));
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    setList((prev) => {
+      const [list1, list2, list3] = selectedList;
+      const temp = prev?.filter((ele) => {
+        return ele?.id !== list1?.id && ele?.id !== list3?.id;
+      });
+      temp.push(list1);
+      temp.push(list3);
+      temp.push(list2);
+      temp.sort((a, b) => a.id - b.id);
+      return temp;
+    });
+    handleCancel();
+  };
 
+  //group by with list_no
   const getGroupedDataByListNo = (lists = []) => {
     const groupedItems = lists.reduce((acc, item) => {
       if (!acc[item.list_number]) {
@@ -88,6 +172,7 @@ const Home = () => {
   };
 
   const fetchListData = async () => {
+    setLoading(true);
     try {
       const response = await fetch("https://apis.ccbp.in/list-creation/lists");
       const data = await response.json();
@@ -95,12 +180,14 @@ const Home = () => {
       setList(groupedData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-     fetchListData()
-  }, [])
+    fetchListData();
+  }, []);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -112,37 +199,44 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <div className="home-header">
-        <h1>List Creation</h1>
-        <Button content="Create a new list" onClick={handleCreateNewList} />
-        <p className="home-error-msg">{errorMsg}</p>
-      </div>
-      <div className="all-listing">
-        {!isCreateNewList &&
-          list?.map((item, idx) => (
-            <List
-              isCreateNewList={isCreateNewList}
-              key={item?.id}
-              listNo={item?.id}
-              listItems={item?.listItems}
-              isSelected={item?.isSelected}
-              handleSelectList={handleSelectList}
-              idx={idx}
-            />
-          ))}
-        {isCreateNewList &&
-          selectedList?.map((item, idx) => (
-            <List
-              isCreateNewList={isCreateNewList}
-              key={item?.id}
-              listNo={item?.id}
-              listItems={item?.listItems}
-              isSelected={item?.isSelected}
-              handleSelectList={handleSelectList}
-              idx={idx}
-            />
-          ))}
-      </div>
+      {!isCreateNewList && (
+        <div className="home-header">
+          <h1>List Creation</h1>
+          <Button content="Create a new list" onClick={handleCreateNewList} />
+          <p className="home-error-msg">{errorMsg}</p>
+        </div>
+      )}
+      {loading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <div className="all-listing">
+          {!isCreateNewList &&
+            list?.map((item, idx) => (
+              <List
+                isCreateNewList={isCreateNewList}
+                key={item?.id}
+                listNo={item?.id}
+                listItems={item?.listItems}
+                isSelected={item?.isSelected}
+                handleSelectList={handleSelectList}
+                idx={idx}
+              />
+            ))}
+          {isCreateNewList &&
+            selectedList?.map((item, idx) => (
+              <List
+                isCreateNewList={isCreateNewList}
+                key={item?.id}
+                listNo={item?.id}
+                listItems={item?.listItems}
+                isSelected={item?.isSelected}
+                handleSelectList={handleSelectList}
+                idx={idx}
+                handleChangeListItem={handleChangeListItem}
+              />
+            ))}
+        </div>
+      )}
       {isCreateNewList && (
         <div className="home-footer">
           <Button content="Cancel" variant="secondary" onClick={handleCancel} />
